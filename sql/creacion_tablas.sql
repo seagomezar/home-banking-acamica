@@ -4,10 +4,10 @@
 // Fran cuentas
 
 CREATE TABLE cuentas(
-   cuenta_id smallint(5) unsigned not null auto_increment primary key,
+   cuenta_id smallint(5)  not null auto_increment primary key,
    nombre varchar(50) not null,
    tipo varchar(50) not null,
-   saldo INT not null
+   saldo INT(10) not null
 );
 
 // rodri usuarios
