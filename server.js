@@ -6,21 +6,13 @@ server.listen(3000, () => {
     console.log("Estamos listos");
 });
 
-/* JSON DE PRUEBA
-const cuentas = [
-    {titular:"martin",nroCuenta:"0123123123",saldo:"0"},
-    {titular:"franco",nroCuenta:"9999999999",saldo:"99999"},
-    {titular:"manuel",nroCuenta:"5555555555",saldo:"55555"}
-];
-*/
 // Añadiendo la linea de conexion
 const url_desarrollo = requiere(credenciales);
 const conexion = new sequelizer(
     urls.server.url_desarrollo
 );
 
-
-// TODO: MArtin hacer que el server funcione
+// TODO: Martin hacer que el server funcione
 server.listen(3000, ()=>{
     console.log("Servidor activo en puerto 3000");
 });
