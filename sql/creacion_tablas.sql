@@ -1,7 +1,7 @@
-// TODO: Escribir el codigo para crear tres tablas cuentas, usuarios, transacciones
+-- TODO: Escribir el codigo para crear tres tablas cuentas, usuarios, transacciones
 
 
-// Fran cuentas
+--Fran cuentas
 
 CREATE TABLE cuentas(
    cuenta_id smallint(5)  not null auto_increment primary key,
@@ -10,6 +10,6 @@ CREATE TABLE cuentas(
    saldo INT(10) not null
 );
 
-// rodri usuarios
+-- rodri usuarios
 
-// transacciones Miguel
+--transacciones Miguel
