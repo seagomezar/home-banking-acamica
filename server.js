@@ -17,3 +17,5 @@ server.use(bodyParser.json());
 server.get("/cuentas", (req,res,err)=>{
     res.json(cuentas);
 });
+
+//Hola a todos
