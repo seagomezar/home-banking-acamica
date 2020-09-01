@@ -23,4 +23,11 @@ server.get("/cuentas", (req,res,err)=>{
     res.json(cuentas);
 });
 
+server.get("/cuentas/:id", (req, res, err) => {
+    const indice = cuentas.findIndex((element) => {
+        return element.cuenta == req.params.id;
+    });
+
+    res.json(cuentas[indice]);
+})
 //Hola a todos
