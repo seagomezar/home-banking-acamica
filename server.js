@@ -8,7 +8,9 @@ const cuentas = [
     {titular:"manuel",nroCuenta:"5555555555",saldo:"55555"}
 ];
 
-server.listen(3000, ()=>{});
+server.listen(3000, ()=>{
+    console.log("Servidor activo en puerto 3000");
+});
 
 server.use(bodyParser.json());
 
