@@ -14,7 +14,7 @@ const conexion = new sequelizer(
   );
 
 
-
+// TODO: MArtin hacer que el server funcione
 server.listen(3000, ()=>{
     console.log("Servidor activo en puerto 3000");
 });
@@ -32,4 +32,4 @@ server.get("/cuentas/:id", (req, res, err) => {
 
     res.json(cuentas[indice]);
 })
-//Hola a todos
+//TODO: Crear los endpoints que faltan DELETE, HACER TRANSACION, CREAR CUENTA
