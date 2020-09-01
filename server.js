@@ -1,16 +1,23 @@
-const express = require('express');
-const server = express();
+const sequelizer = require("sequelize");
+const express = require("express");
+const server = new express();
 const bodyParser = require("body-parser");
+server.listen(3000, () => {
+    console.log("Estamos listos");
+});
+
+/* JSON DE PRUEBA
 const cuentas = [
     {titular:"martin",nroCuenta:"0123123123",saldo:"0"},
     {titular:"franco",nroCuenta:"9999999999",saldo:"99999"},
     {titular:"manuel",nroCuenta:"5555555555",saldo:"55555"}
 ];
-
+*/
 // Añadiendo la linea de conexion
+const url_desarrollo = requiere(credenciales);
 const conexion = new sequelizer(
-    "mysql://sebas:some_pass@192.168.64.2:3306/clase_sql"
-  );
+    urls.server.url_desarrollo
+);
 
 
 // TODO: MArtin hacer que el server funcione
@@ -34,4 +41,40 @@ server.get("/cuentas/:id", (req, res, err) => {
 //TODO: Crear los endpoints que faltan DELETE, HACER TRANSACION, CREAR CUENTA
 
 
-//TODO: ANA, crear endpoint de registrar usuarios
+//TO
+async function hacerUpdate(id, nuevoPrecio) {
+  try {
+    const resultado = await conexion.query(
+      "UPDATE panes SET precio = :nuevoPrecio WHERE id = :id",
+      {
+        replacements: { id: id, nuevoPrecio: nuevoPrecio },
+      }
+    );
+    console.log("# UPDATE SUCCESSFULL", resultado);
+  } catch (e) {
+    console.log("# ERROR UPDATE", e);
+  }
+}
+async function hacerDelete(id) {
+  try {
+    const resultado = await conexion.query("DELETE panes WHERE id = :id", {
+      replacements: { id: id },
+    });
+    console.log("# DELETE SUCCESSFULL", resultado);
+  } catch (e) {
+    console.log("# ERROR DELETE", e);
+  }
+}
+async function hacerInsert(pan) {
+  try {
+    const resultado = await conexion.query(
+      "INSERT INTO panes (id, nombre, precio) VALUES (?, ?, ?)",
+      {
+        replacements: [pan.id, pan.nombre, pan.precio],
+      }
+    );
+    console.log("# INSERT SUCCESSFULL", resultado);
+  } catch (e) {
+    console.log("#ERROR INSERT", e);
+  }
+}
