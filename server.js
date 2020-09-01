@@ -37,3 +37,8 @@ server.get("/cuentas/:id", (req, res, err) => {
 
 
 //TODO: ANA, crear endpoint de registrar usuarios
+server.post("/usuarios", (req,res)=>{
+    const nuevoUsuario = new Usuarios(req.body);
+    const usuarioGuardado = nuevoUsuario.save();
+    res.status(201).json(usuarioGuardado);
+});
