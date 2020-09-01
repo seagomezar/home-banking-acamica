@@ -1,4 +1,3 @@
-
 const express = require('express');
 const server = express();
 const bodyParser = require("body-parser");
@@ -33,3 +32,6 @@ server.get("/cuentas/:id", (req, res, err) => {
     res.json(cuentas[indice]);
 })
 //TODO: Crear los endpoints que faltan DELETE, HACER TRANSACION, CREAR CUENTA
+
+
+//TODO: ANA, crear endpoint de registrar usuarios
