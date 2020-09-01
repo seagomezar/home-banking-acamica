@@ -1,6 +1,8 @@
 const express = require('express');
 const server = express();
 const bodyParser = require("body-parser");
+
+// Logica del servidor
 const cuentas = [
     {titular:"martin",nroCuenta:"0123123123",saldo:"14566"},
     {titular:"franco",nroCuenta:"9999999999",saldo:"99999"},
