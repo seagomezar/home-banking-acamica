@@ -64,20 +64,22 @@ server.get("/usuarios/:id", (req, res) => {
 //TODO: Crear los endpoints que faltan DELETE, HACER TRANSACION, CREAR CUENTA
 
 //Borra el usuario con una funcion TODO: persistir borrado en SQL
-server.delete("/cuentas/:id", (req, res) => {
+server.delete("/usuarios/:id", (req, res) => {
     const indice = cuentas.findIndex((element) => {
-        return element.cuenta_id == req.params.id;
+      return element.cuenta_id == req.params.id;
     });
-
+  
     if (indice >= 0) {
-        borrarCuenta(indice);
+        borrarCuenta(cuentas[indice].cuenta_id);
         res.status(202).json({ok: true, mensaje:"Cuenta borrada numero : " + cuentas[indice].cuenta_id + " Usuario: " + cuentas[indice].nombre});
+        cuentas.splice(indice, 1);
+        usuarios.splice(indice, 1);
     } else {
         res.status(500).json({ok: false, error:"Cuenta inexistente."})
     }
 })
 
-// Crear usuario con Form, y crea tanto usuario como cuenta TODO: persistir usuario en SQL
+// Crear usuario con Form, y crea tanto usuario como cuenta
 server.post("/usuarios",  (req, res) => {
     if (req.body.usuario.length>0) {
         const indice = usuarios.findIndex((element) => {
@@ -99,9 +101,6 @@ server.post("/usuarios",  (req, res) => {
                 "pass": req.body.password,
                 "email": req.body.email
             }
-        
-            usuarios.push(usuario);
-            cuentas.push(cuenta);
 
             hacerInsertCuenta(cuenta).then( (id) => {
               cuenta.id = id;
@@ -120,46 +119,49 @@ server.post("/usuarios",  (req, res) => {
     } else {
         res.status(500).json({ok: false, error: "Nombre de usuario vacío."});
     };
+    listarCuentas();
 });
 
 //Transferencia entre usuarios, valida que existan origen y destino, y que tenga el origen saldo suficiente.
 // TODO: persistir transferencia en SQL
-server.put("/cuentas/transfer", (req, res) => {
+server.post("/cuentas/transfer", (req, res) => {
     const indiceDestino = cuentas.findIndex((element) => {
         return element.cuenta_id == req.body.destino;
     });
     const indiceOrigen = cuentas.findIndex((element) => {
-        return element.cuenta_id == req.body.cuenta;
+        return element.cuenta_id == req.body.origen;
     });
 
     if (indiceOrigen == -1 || indiceDestino == -1) {
         res.status(500).json({ok: false, error: "Cuenta Origen o Destino inexistentes"});
-    } else if (cuentas[indiceOrigen].saldo >= req.body.saldo) {
-        cuentas[indiceOrigen].saldo -= req.body.saldo;
-        cuentas[indiceDestino].saldo += req.body.saldo;
-        //guardaEnTransacciones();
-        res.status(200).json({ok: true});
+    } else if (cuentas[indiceOrigen].saldo >= req.body.monto) {
+        cuentas[indiceOrigen].saldo -= req.body.monto;
+        cuentas[indiceDestino].saldo += req.body.monto;
+        guardaEnTransacciones(req.body).then( (trasferenciaId) => {
+          res.status(200).json({ok: true, id: trasferenciaId});
+        });
     } else {
         res.status(400).json({ok: false, error: "Sin saldo suficiente"});
     };
 
 });
 
-/*
-async function hacerUpdateCuenta(cuenta) {
+
+async function hacerUpdateSaldo(cuenta, monto) {
   try {
     const resultado = await conexion.query(
-      "UPDATE cuentas SET nombre = :nombre , tipo = :tipo , saldo = :saldo WHERE cuenta_id = :id",
+      "UPDATE cuentas SET saldo = saldo + :monto WHERE cuenta_id = :id",
       {
-        replacements: { nombre: cuenta.nombre, tipo: cuenta.tipo, saldo: cuenta.saldo},
+        replacements: {monto: monto, id: cuenta},
       }
     );
-    console.log("# UPDATE SUCCESSFULL", resultado);
+    console.log("# UPDATE SUCCESSFULL " + cuenta, resultado);
   } catch (e) {
     console.log("# ERROR UPDATE", e);
   }
 }
 
+/*
 async function hacerUpdateUsuario(usuario) {
   try {
     const resultado = await conexion.query(
@@ -174,9 +176,9 @@ async function hacerUpdateUsuario(usuario) {
   }
 }
 */
-async function hacerDelete(id) {
+async function borrarCuenta(id) {
   try {
-    const resultado = await conexion.query("DELETE usuario WHERE id = :id", {
+    const resultado = await conexion.query("DELETE FROM usuarios WHERE id = :id", {
       replacements: { id: id },
     });
     console.log("# DELETE usuarios SUCCESSFULL", resultado);
@@ -185,7 +187,7 @@ async function hacerDelete(id) {
     return false;
   }
   try {
-    const resultado = await conexion.query("DELETE cuenta WHERE cuenta_id = :id", {
+    const resultado = await conexion.query("DELETE FROM cuentas WHERE cuenta_id = :id", {
       replacements: { id: id },
     });
     console.log("# DELETE cuentas SUCCESSFULL", resultado);
@@ -220,6 +222,24 @@ async function hacerInsertUsuario(usuario) {
       }
     );
     console.log("# INSERT usuario SUCCESSFULL", resultado);
+    return resultado[0];
+  } catch (e) {
+    console.log("#ERROR INSERT", e);
+  }
+}
+
+async function guardaEnTransacciones(transferencia) {
+  try {
+    const resultado = await conexion.query(
+      "INSERT INTO transacciones (origen, destino, monto) VALUES (:origen, :destino, :monto)",
+      {
+        replacements: {origen: transferencia.origen, destino: transferencia.destino, monto: transferencia.monto},
+      }
+    );
+    console.log("# INSERT transferencia SUCCESSFULL", resultado);
+
+    hacerUpdateSaldo(transferencia.origen, -transferencia.monto);
+    hacerUpdateSaldo(transferencia.destino, transferencia.monto);
     return resultado[0];
   } catch (e) {
     console.log("#ERROR INSERT", e);

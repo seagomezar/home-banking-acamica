@@ -18,6 +18,12 @@ CREATE TABLE usuarios (
     nombre varchar(60) not null,
     apellido varchar(60) not null,
     email varchar(40) not null
-)
+);
 
 --transacciones Miguel
+CREATE TABLE transacciones(
+   id smallint(5)  not null auto_increment primary key,
+   origen smallint(5) not null,
+   destino smallint(5) not null,
+   monto int(10) not null
+);
