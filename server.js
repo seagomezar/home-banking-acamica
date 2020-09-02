@@ -25,7 +25,6 @@ conexion
   });
 
 
-// TODO: Martin hacer que el server funcione
 server.listen(3000, ()=>{
     console.log("Servidor activo en puerto 3000");
 });
@@ -61,9 +60,7 @@ server.get("/usuarios/:id", (req, res) => {
     res.json(usuarios[indice]);
 })
 
-//TODO: Crear los endpoints que faltan DELETE, HACER TRANSACION, CREAR CUENTA
-
-//Borra el usuario con una funcion TODO: persistir borrado en SQL
+//Borra el usuario con una funcion 
 server.delete("/usuarios/:id", (req, res) => {
     const indice = cuentas.findIndex((element) => {
       return element.cuenta_id == req.params.id;
@@ -123,7 +120,6 @@ server.post("/usuarios",  (req, res) => {
 });
 
 //Transferencia entre usuarios, valida que existan origen y destino, y que tenga el origen saldo suficiente.
-// TODO: persistir transferencia en SQL
 server.post("/cuentas/transfer", (req, res) => {
     const indiceDestino = cuentas.findIndex((element) => {
         return element.cuenta_id == req.body.destino;
