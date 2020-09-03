@@ -233,7 +233,6 @@ async function guardaEnTransacciones(transferencia) {
       }
     );
     console.log("# INSERT transferencia SUCCESSFULL", resultado);
-
     hacerUpdateSaldo(transferencia.origen, -transferencia.monto);
     hacerUpdateSaldo(transferencia.destino, transferencia.monto);
     return resultado[0];
@@ -265,3 +264,9 @@ async function listarUsuarios(id = "%") {
     console.log("#ERROR SELECT", e);
   }
 }
+//TODO: ANA, crear endpoint de registrar usuarios
+server.post("/usuarios", (req,res)=>{
+    const nuevoUsuario = new Usuarios(req.body);
+    const usuarioGuardado = nuevoUsuario.save();
+    res.status(201).json(usuarioGuardado);
+});
