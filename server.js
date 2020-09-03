@@ -246,9 +246,8 @@ async function listarCuentas(id = "%") {
   try {
     cuentas = await conexion.query("SELECT * FROM cuentas WHERE cuenta_id LIKE :id", {
       replacements: { id: id },
+      type: sequelizer.QueryTypes.SELECT
     });
-    cuentas = cuentas[0];
-    console.log("Cuentas: ", cuentas);
     return true;
   } catch (e) {
     console.log("#ERROR SELECT", e);
@@ -259,9 +258,8 @@ async function listarUsuarios(id = "%") {
   try {
     usuarios = await conexion.query("SELECT * FROM usuarios WHERE id LIKE :id", {
       replacements: { id: id },
+      type: sequelizer.QueryTypes.SELECT
     });
-    usuarios = usuarios[0];
-    console.log("Usuarios: ", usuarios);
     return true;
   } catch (e) {
     console.log("#ERROR SELECT", e);
